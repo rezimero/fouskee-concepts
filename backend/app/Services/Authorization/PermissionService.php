@@ -20,19 +20,53 @@ class PermissionService
             return false;
         }
 
-        $assignments = $this->activeAssignments($user, $organization);
-
-        if ((clone $assignments)
-            ->whereHas('role', fn (Builder $query) => $query->where('code', 'superadmin'))
-            ->where('scope_key', 'global')
-            ->exists()) {
+        if ($this->isSuperadmin($user, $organization)) {
             return true;
         }
 
-        $code = $permission instanceof PermissionCode ? $permission->value : $permission;
+        $code = $permission instanceof PermissionCode
+            ? $permission->value
+            : $permission;
 
-        return $assignments
-            ->whereHas('role.permissions', fn (Builder $query) => $query->where('code', $code))
+        return $this->activeAssignments($user, $organization)
+            ->whereHas('role.permissions', fn (Builder $query) => $query
+                ->where('code', $code))
+            ->exists();
+    }
+
+    public function codes(
+        User $user,
+        ?Organization $organization = null,
+    ): array {
+        if ($user->status !== UserStatus::Active) {
+            return [];
+        }
+
+        if ($this->isSuperadmin($user, $organization)) {
+            return ['*'];
+        }
+
+        return $this->activeAssignments($user, $organization)
+            ->with('role.permissions:id,code')
+            ->get()
+            ->flatMap(fn (UserRoleAssignment $assignment) => $assignment
+                ->role
+                ->permissions
+                ->pluck('code'))
+            ->unique()
+            ->sort()
+            ->values()
+            ->all();
+    }
+
+    private function isSuperadmin(
+        User $user,
+        ?Organization $organization,
+    ): bool {
+        return (clone $this->activeAssignments($user, $organization))
+            ->whereHas('role', fn (Builder $query) => $query
+                ->where('code', 'superadmin'))
+            ->where('scope_key', 'global')
             ->exists();
     }
 
