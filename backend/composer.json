@@ -7,7 +7,9 @@
     "license": "MIT",
     "require": {
         "php": "^8.3",
+        "laravel/fortify": "*",
         "laravel/framework": "^13.17",
+        "laravel/sanctum": "*",
         "laravel/tinker": "^3.0"
     },
     "require-dev": {
