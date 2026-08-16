@@ -1,0 +1,85 @@
+.auth-stage {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: minmax(420px, 1.08fr) minmax(460px, 0.92fr);
+  background:
+    radial-gradient(circle at 18% 20%, rgba(155, 210, 60, 0.13), transparent 25%),
+    var(--fc-ivory);
+}
+.auth-story {
+  min-height: 100vh;
+  padding: clamp(36px, 6vw, 84px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: white;
+  background:
+    radial-gradient(circle at 78% 12%, rgba(255, 132, 20, 0.3), transparent 20%),
+    radial-gradient(circle at 12% 88%, rgba(155, 210, 60, 0.2), transparent 28%),
+    #27221e;
+}
+.auth-story__content { max-width: 640px; }
+.auth-story__content .eyebrow { color: var(--fc-green); }
+.auth-story__content h1 { margin: 18px 0 22px; max-width: 590px; }
+.auth-story__content p {
+  max-width: 540px;
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 1.04rem;
+}
+.auth-story__footer {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  color: rgba(255, 255, 255, 0.66);
+  font-size: 0.85rem;
+}
+.auth-panel {
+  min-height: 100vh;
+  padding: 42px clamp(28px, 7vw, 96px);
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 22px;
+}
+.auth-card {
+  width: min(100%, 500px);
+  padding: clamp(28px, 5vw, 48px);
+  border: 1px solid rgba(231, 225, 216, 0.85);
+  border-radius: var(--radius-lg);
+  background: var(--fc-card);
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(18px);
+}
+.auth-card__heading { margin-bottom: 30px; }
+.auth-card__heading h2 { margin: 9px 0 8px; color: var(--fc-charcoal); }
+.auth-card__heading p { margin: 0; }
+.auth-form { display: grid; gap: 18px; }
+.auth-panel__legal { margin: 0; font-size: 0.78rem; text-align: center; }
+.step-copy { margin: -2px 0 2px; font-size: 0.9rem; }
+.qr-frame {
+  width: 224px;
+  height: 224px;
+  margin: 0 auto;
+  padding: 14px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--fc-border);
+  border-radius: 22px;
+  background: white;
+}
+.qr-frame img { width: 100%; height: 100%; }
+.recovery-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.recovery-grid code {
+  padding: 10px;
+  border: 1px solid var(--fc-border);
+  border-radius: 10px;
+  background: white;
+  font-size: 0.8rem;
+  text-align: center;
+}
+@media (max-width: 900px) {
+  .auth-stage { grid-template-columns: 1fr; }
+  .auth-story { min-height: 300px; padding: 34px; }
+  .auth-story__footer { display: none; }
+  .auth-panel { min-height: auto; padding: 32px 20px 48px; }
+}
