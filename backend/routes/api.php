@@ -1,9 +1,13 @@
 <?php
 
+use App\Http\Controllers\Api\V1\BrandController;
+use App\Http\Controllers\Api\V1\CatalogReferenceController;
 use App\Http\Controllers\Api\V1\CustomerController;
 use App\Http\Controllers\Api\V1\MeController;
 use App\Http\Controllers\Api\V1\PriceListController;
 use App\Http\Controllers\Api\V1\PriceListItemController;
+use App\Http\Controllers\Api\V1\PriceListItemIndexController;
+use App\Http\Controllers\Api\V1\ProductCategoryController;
 use App\Http\Controllers\Api\V1\ProductController;
 use App\Http\Controllers\Api\V1\SecuritySessionController;
 use App\Http\Controllers\Api\V1\SupplierController;
@@ -43,10 +47,24 @@ Route::prefix('v1')
                 Route::post('/products', [ProductController::class, 'store'])
                     ->middleware('permission:catalog.manage');
 
+                Route::get('/catalog/references', CatalogReferenceController::class)
+                    ->middleware('permission:catalog.view');
+                Route::post('/brands', [BrandController::class, 'store'])
+                    ->middleware('permission:catalog.manage');
+                Route::post('/categories', [
+                    ProductCategoryController::class,
+                    'store',
+                ])->middleware('permission:catalog.manage');
+
                 Route::get('/price-lists', [PriceListController::class, 'index'])
                     ->middleware('permission:pricing.view');
                 Route::post('/price-lists', [PriceListController::class, 'store'])
                     ->middleware('permission:pricing.manage');
+
+                Route::get(
+                    '/price-lists/{priceListPublicId}/items',
+                    PriceListItemIndexController::class,
+                )->middleware('permission:pricing.view');
 
                 Route::put(
                     '/price-lists/{priceListPublicId}/items/{packagingPublicId}',

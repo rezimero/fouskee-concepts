@@ -1,0 +1,96 @@
+.field select {
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 14px;
+  border: 1px solid var(--fc-border);
+  border-radius: var(--radius-sm);
+  outline: none;
+  color: var(--fc-charcoal);
+  background: white;
+}
+.field select:focus {
+  border-color: rgba(95, 143, 24, 0.6);
+  box-shadow: 0 0 0 4px rgba(155, 210, 60, 0.13);
+}
+.form-stack { display: grid; gap: 17px; }
+.form-stack--nested {
+  padding-top: 20px;
+  border-top: 1px solid var(--fc-border);
+}
+.form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+.form-actions { padding-top: 4px; display: flex; gap: 10px; justify-content: flex-end; }
+.sheet-backdrop {
+  position: fixed;
+  z-index: 50;
+  inset: 0;
+  display: flex;
+  justify-content: flex-end;
+  background: rgba(42, 36, 31, 0.42);
+  backdrop-filter: blur(3px);
+}
+.sheet {
+  width: min(680px, 94vw);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--fc-ivory);
+  box-shadow: -20px 0 60px rgba(42, 36, 31, 0.18);
+}
+.sheet__header {
+  padding: 24px 26px 18px;
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--fc-border);
+}
+.sheet__header h2 { margin: 6px 0 5px; }
+.sheet__header p { margin: 0; font-size: 0.82rem; }
+.sheet__body { padding: 24px 26px 40px; overflow-y: auto; }
+.reference-form {
+  padding-top: 18px;
+  display: grid;
+  gap: 13px;
+  border-top: 1px solid var(--fc-border);
+}
+.packaging-editor {
+  padding: 16px;
+  display: grid;
+  gap: 12px;
+  border: 1px solid var(--fc-border);
+  border-radius: var(--radius-md);
+  background: #f7f4ed;
+}
+.packaging-editor .panel-toolbar { margin: 0; }
+.packaging-row {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr 1fr 0.7fr auto;
+  gap: 9px;
+  align-items: end;
+}
+.packaging-row .field { font-size: 0.72rem; }
+.price-summary { display: grid; gap: 4px; }
+.price-summary small { color: var(--fc-muted); }
+.price-item-list {
+  max-height: 220px;
+  display: grid;
+  gap: 8px;
+  overflow-y: auto;
+}
+.price-item {
+  padding: 12px;
+  display: flex;
+  gap: 18px;
+  justify-content: space-between;
+  border: 1px solid var(--fc-border);
+  border-radius: 12px;
+  background: white;
+}
+.price-item > span { display: grid; gap: 3px; }
+.price-item > span:last-child { text-align: right; }
+.price-item small { color: var(--fc-muted); font-size: 0.7rem; }
+.alert--success {
+  border: 1px solid rgba(40, 122, 55, 0.16);
+  color: var(--fc-success);
+  background: var(--fc-success-soft);
+}
