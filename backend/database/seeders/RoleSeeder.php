@@ -13,7 +13,11 @@ class RoleSeeder extends Seeder
     public function run(): void
     {
         $superadmin = $this->role('superadmin', 'Superadmin', RoleScope::Global);
-        $administrator = $this->role('administrator', 'Administrator', RoleScope::Organization);
+        $administrator = $this->role(
+            'administrator',
+            'Administrator',
+            RoleScope::Organization,
+        );
         $auditor = $this->role('auditor', 'Auditor', RoleScope::Organization);
 
         $administrator->permissions()->sync($this->ids([
@@ -23,11 +27,23 @@ class RoleSeeder extends Seeder
             PermissionCode::UserManage,
             PermissionCode::RoleView,
             PermissionCode::RoleManage,
+            PermissionCode::CustomerView,
+            PermissionCode::CustomerManage,
+            PermissionCode::SupplierView,
+            PermissionCode::SupplierManage,
+            PermissionCode::CatalogView,
+            PermissionCode::CatalogManage,
+            PermissionCode::PricingView,
+            PermissionCode::PricingManage,
             PermissionCode::AuditView,
         ]));
 
         $auditor->permissions()->sync($this->ids([
             PermissionCode::OrganizationView,
+            PermissionCode::CustomerView,
+            PermissionCode::SupplierView,
+            PermissionCode::CatalogView,
+            PermissionCode::PricingView,
             PermissionCode::AuditView,
             PermissionCode::AuditExport,
         ]));

@@ -10,6 +10,14 @@ enum PermissionCode: string
     case UserManage = 'identity.users.manage';
     case RoleView = 'identity.roles.view';
     case RoleManage = 'identity.roles.manage';
+    case CustomerView = 'customers.view';
+    case CustomerManage = 'customers.manage';
+    case SupplierView = 'suppliers.view';
+    case SupplierManage = 'suppliers.manage';
+    case CatalogView = 'catalog.view';
+    case CatalogManage = 'catalog.manage';
+    case PricingView = 'pricing.view';
+    case PricingManage = 'pricing.manage';
     case AuditView = 'audit.view';
     case AuditExport = 'audit.export';
     case Impersonate = 'security.impersonate';
