@@ -6,6 +6,9 @@ import './styles/base.css'
 import './styles/auth.css'
 import './styles/shell.css'
 import './styles/components.css'
+import './styles/branding.css'
+import './styles/master-data.css'
+import './styles/forms.css'
 import './styles/responsive.css'
 
 createRoot(document.getElementById('root')!).render(
@@ -13,4 +16,3 @@ createRoot(document.getElementById('root')!).render(
     <App />
   </StrictMode>,
 )
-import './styles/branding.css'
