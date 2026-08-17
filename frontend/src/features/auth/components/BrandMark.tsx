@@ -7,7 +7,7 @@ export function BrandMark({ compact = false }: BrandMarkProps) {
     <div className={`brand-mark ${compact ? 'brand-mark--compact' : ''}`}>
       <img
         className="brand-mark__official"
-        src="/branding/fouskee-concepts-logo.png"
+        src="/branding/fouskee-concepts-logo-cropped.png"
         alt="Fouskee Concepts"
       />
     </div>

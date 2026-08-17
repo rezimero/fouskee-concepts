@@ -1,20 +1,28 @@
-# Fouskee Concepts brand asset
+# Fouskee Concepts brand assets
 
-## Canonical application logo
+## Canonical source
 
-The canonical application logo is:
+The exact user-supplied logo remains:
 
 `frontend/public/branding/fouskee-concepts-logo.png`
 
-This file is the exact user-approved Fouskee Concepts artwork supplied for the
-project. UI components must use this asset rather than recreating, approximating,
-or substituting the FC monogram in code.
+It is preserved unchanged as the canonical source artwork.
 
-## Usage
+## Presentation derivative
 
-`BrandMark.tsx` is the shared presentation component for the login experience,
-loading state, and authenticated navigation. It references the canonical public
-asset directly and only changes rendered size through CSS.
+The application renders:
 
-Do not redraw the logo with text, CSS shapes, icon libraries, or generated
-artwork unless a future brand decision explicitly replaces the canonical asset.
+`frontend/public/branding/fouskee-concepts-logo-cropped.png`
+
+This derivative contains the same source pixels with only excess outer ivory
+canvas removed. The FC artwork, colors, proportions, and wordmark are untouched.
+
+This lets the logo occupy appropriate visual weight in the sidebar, login,
+loading, and responsive navigation contexts without redrawing or approximating
+the brand.
+
+## Rule
+
+Do not recreate the FC mark with CSS, text, icons, or generated artwork.
+Presentation derivatives may only remove unused outer canvas unless a future
+brand decision explicitly approves another treatment.
