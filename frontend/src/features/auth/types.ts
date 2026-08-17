@@ -1,15 +1,10 @@
-export type LoginCredentials = {
-  email: string
-  password: string
-  remember?: boolean
+export type OrganizationSummary = {
+  id: string
+  code: string
+  name: string
 }
 
-export type MfaChallenge = {
-  code?: string
-  recovery_code?: string
-}
-
-export type IdentityContext = {
+export type AuthUser = {
   id: string
   name: string
   email: string
@@ -18,19 +13,25 @@ export type IdentityContext = {
     required: boolean
     enrolled: boolean
   }
-  organization: {
-    id: string
-    code: string
-    name: string
-  } | null
+  organization: OrganizationSummary | null
   roles: string[]
   permissions: string[]
 }
 
+export type LoginPayload = {
+  email: string
+  password: string
+  remember?: boolean
+}
+
+export type LoginResult = {
+  two_factor?: boolean
+}
+
 export type SecuritySession = {
   reference: string
-  ip_address: string | null
-  user_agent: string | null
+  ip_address?: string | null
+  user_agent?: string | null
   last_active_at: string
-  current: boolean
+  current?: boolean
 }
