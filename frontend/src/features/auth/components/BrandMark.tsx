@@ -1,16 +1,15 @@
-export function BrandMark({ compact = false }: { compact?: boolean }) {
+type BrandMarkProps = {
+  compact?: boolean
+}
+
+export function BrandMark({ compact = false }: BrandMarkProps) {
   return (
     <div className={`brand-mark ${compact ? 'brand-mark--compact' : ''}`}>
-      <span className="brand-mark__monogram" aria-hidden="true">
-        <span className="brand-mark__f">F</span>
-        <span className="brand-mark__c">C</span>
-      </span>
-      {!compact && (
-        <span className="brand-mark__wordmark">
-          <strong>Fouskee</strong>
-          <small>Concepts</small>
-        </span>
-      )}
+      <img
+        className="brand-mark__official"
+        src="/branding/fouskee-concepts-logo-cropped.png"
+        alt="Fouskee Concepts"
+      />
     </div>
   )
 }
