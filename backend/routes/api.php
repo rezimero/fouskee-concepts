@@ -3,6 +3,15 @@
 use App\Http\Controllers\Api\V1\BrandController;
 use App\Http\Controllers\Api\V1\CatalogReferenceController;
 use App\Http\Controllers\Api\V1\CustomerController;
+use App\Http\Controllers\Api\V1\InventoryAdjustmentController;
+use App\Http\Controllers\Api\V1\InventoryBalanceController;
+use App\Http\Controllers\Api\V1\InventoryLocationController;
+use App\Http\Controllers\Api\V1\InventoryMovementController;
+use App\Http\Controllers\Api\V1\InventoryReceiptController;
+use App\Http\Controllers\Api\V1\InventoryReservationController;
+use App\Http\Controllers\Api\V1\InventoryReservationReleaseController;
+use App\Http\Controllers\Api\V1\InventoryReversalController;
+use App\Http\Controllers\Api\V1\InventoryTransferController;
 use App\Http\Controllers\Api\V1\MeController;
 use App\Http\Controllers\Api\V1\PriceListController;
 use App\Http\Controllers\Api\V1\PriceListItemController;
@@ -73,6 +82,38 @@ Route::prefix('v1')
                     'permission:pricing.manage',
                     'privileged.reason',
                 ]);
+            });
+
+            Route::prefix('inventory')->group(function (): void {
+                Route::get('/locations', [InventoryLocationController::class, 'index'])
+                    ->middleware('permission:inventory.view');
+                Route::post('/locations', [InventoryLocationController::class, 'store'])
+                    ->middleware('permission:inventory.locations.manage');
+                Route::get('/balances', InventoryBalanceController::class)
+                    ->middleware('permission:inventory.view');
+                Route::get('/movements', [InventoryMovementController::class, 'index'])
+                    ->middleware('permission:inventory.view');
+                Route::get('/movements/{movementPublicId}', [
+                    InventoryMovementController::class,
+                    'show',
+                ])->middleware('permission:inventory.view');
+
+                Route::post('/receipts', [InventoryReceiptController::class, 'store'])
+                    ->middleware('permission:inventory.receive');
+                Route::post('/transfers', [InventoryTransferController::class, 'store'])
+                    ->middleware('permission:inventory.transfer');
+                Route::post('/adjustments', [InventoryAdjustmentController::class, 'store'])
+                    ->middleware(['permission:inventory.adjust', 'privileged.reason']);
+                Route::post('/movements/{movementPublicId}/reversals', [
+                    InventoryReversalController::class,
+                    'store',
+                ])->middleware(['permission:inventory.reverse', 'privileged.reason']);
+
+                Route::post('/reservations', [InventoryReservationController::class, 'store'])
+                    ->middleware('permission:inventory.reserve');
+                Route::post('/reservations/{reservationPublicId}/release',
+                    InventoryReservationReleaseController::class)
+                    ->middleware('permission:inventory.reserve');
             });
         });
     });

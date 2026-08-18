@@ -18,6 +18,17 @@ enum PermissionCode: string
     case CatalogManage = 'catalog.manage';
     case PricingView = 'pricing.view';
     case PricingManage = 'pricing.manage';
+    case InventoryView = 'inventory.view';
+    case InventoryLocationManage = 'inventory.locations.manage';
+    case InventoryReceive = 'inventory.receive';
+    case InventoryTransfer = 'inventory.transfer';
+    case InventoryReserve = 'inventory.reserve';
+    case InventoryCount = 'inventory.count';
+    case InventoryAdjust = 'inventory.adjust';
+    case InventoryAdjustApprove = 'inventory.adjust.approve';
+    case InventoryReverse = 'inventory.reverse';
+    case InventoryBackdate = 'inventory.backdate';
+    case InventoryNegativeStockOverride = 'inventory.negative_stock.override';
     case AuditView = 'audit.view';
     case AuditExport = 'audit.export';
     case Impersonate = 'security.impersonate';
