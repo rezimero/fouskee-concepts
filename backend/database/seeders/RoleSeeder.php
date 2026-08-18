@@ -45,6 +45,14 @@ class RoleSeeder extends Seeder
             PermissionCode::InventoryAdjust,
             PermissionCode::InventoryAdjustApprove,
             PermissionCode::InventoryReverse,
+            PermissionCode::ProcurementView,
+            PermissionCode::ProcurementManage,
+            PermissionCode::ProcurementSubmit,
+            PermissionCode::ProcurementApprove,
+            PermissionCode::ProcurementReceive,
+            PermissionCode::ProcurementInvoice,
+            PermissionCode::ProcurementMatch,
+            PermissionCode::ProcurementExceptionApprove,
             PermissionCode::AuditView,
         ]));
 
@@ -55,6 +63,7 @@ class RoleSeeder extends Seeder
             PermissionCode::CatalogView,
             PermissionCode::PricingView,
             PermissionCode::InventoryView,
+            PermissionCode::ProcurementView,
             PermissionCode::AuditView,
             PermissionCode::AuditExport,
         ]));
