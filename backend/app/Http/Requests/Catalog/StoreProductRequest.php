@@ -4,6 +4,7 @@ namespace App\Http\Requests\Catalog;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Validator;
 
 class StoreProductRequest extends FormRequest
 {
@@ -48,6 +49,29 @@ class StoreProductRequest extends FormRequest
             ],
             'packagings.*.is_default_sale' => ['sometimes', 'boolean'],
             'packagings.*.is_default_purchase' => ['sometimes', 'boolean'],
+        ];
+    }
+
+    public function after(): array
+    {
+        return [
+            function (Validator $validator): void {
+                $packagings = $this->input('packagings', []);
+
+                foreach (['is_default_sale', 'is_default_purchase'] as $field) {
+                    $count = count(array_filter(
+                        $packagings,
+                        fn (array $row) => filter_var($row[$field] ?? false, FILTER_VALIDATE_BOOL),
+                    ));
+
+                    if ($count > 1) {
+                        $validator->errors()->add(
+                            'packagings',
+                            "Only one packaging may be selected for {$field}.",
+                        );
+                    }
+                }
+            },
         ];
     }
 }
