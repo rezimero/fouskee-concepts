@@ -4,11 +4,9 @@
   .packaging-row .icon-button { align-self: end; }
 }
 @media (max-width: 980px) {
-  .app-shell { grid-template-columns: 82px 1fr; }
-  .sidebar { padding: 22px 13px; }
-  .sidebar .brand-mark__official { width: 58px; }
-  .nav-link span, .sidebar__footer div { display: none; }
-  .nav-link { justify-content: center; }
+  .app-shell:not(.app-shell--sidebar-collapsed) .nav-section__label {
+    display: block;
+  }
   .metric-grid, .module-grid { grid-template-columns: repeat(2, 1fr); }
   .security-action-card { grid-template-columns: 1fr; }
   .workspace-header { align-items: flex-start; flex-direction: column; }
