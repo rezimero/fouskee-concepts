@@ -30,6 +30,14 @@ enum PermissionCode: string
     case InventoryReverse = 'inventory.reverse';
     case InventoryBackdate = 'inventory.backdate';
     case InventoryNegativeStockOverride = 'inventory.negative_stock.override';
+    case ProcurementView = 'procurement.view';
+    case ProcurementManage = 'procurement.manage';
+    case ProcurementSubmit = 'procurement.submit';
+    case ProcurementApprove = 'procurement.approve';
+    case ProcurementReceive = 'procurement.receive';
+    case ProcurementInvoice = 'procurement.invoice';
+    case ProcurementMatch = 'procurement.match';
+    case ProcurementExceptionApprove = 'procurement.exception.approve';
     case AuditView = 'audit.view';
     case AuditExport = 'audit.export';
     case Impersonate = 'security.impersonate';

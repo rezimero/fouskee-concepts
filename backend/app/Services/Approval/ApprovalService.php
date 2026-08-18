@@ -63,7 +63,12 @@ class ApprovalService
             'decision_reason' => $reason,
         ]);
 
-        $this->recordDecision($approval, $actor, 'approval.approved', $reason);
+        $this->recordDecision(
+            $approval,
+            $actor,
+            'approval.approved',
+            $reason,
+        );
 
         return $approval;
     }
@@ -82,7 +87,42 @@ class ApprovalService
             'decision_reason' => $reason,
         ]);
 
-        $this->recordDecision($approval, $actor, 'approval.rejected', $reason);
+        $this->recordDecision(
+            $approval,
+            $actor,
+            'approval.rejected',
+            $reason,
+        );
+
+        return $approval;
+    }
+
+    public function cancel(
+        ApprovalRequest $approval,
+        User $actor,
+        string $reason,
+    ): ApprovalRequest {
+        if ($approval->status !== ApprovalStatus::Pending) {
+            throw new InventoryDomainException(
+                'approval_not_pending',
+                'Only a pending approval request can be cancelled.',
+                409,
+            );
+        }
+
+        $approval->update([
+            'status' => ApprovalStatus::Cancelled,
+            'decided_by_user_id' => $actor->id,
+            'decided_at' => now(),
+            'decision_reason' => $reason,
+        ]);
+
+        $this->recordDecision(
+            $approval,
+            $actor,
+            'approval.cancelled',
+            $reason,
+        );
 
         return $approval;
     }

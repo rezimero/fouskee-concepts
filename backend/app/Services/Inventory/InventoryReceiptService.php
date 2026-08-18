@@ -5,6 +5,7 @@ namespace App\Services\Inventory;
 use App\Enums\InventoryMovementType;
 use App\Models\Organization;
 use App\Models\User;
+use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\DB;
 
 class InventoryReceiptService
@@ -25,6 +26,9 @@ class InventoryReceiptService
         array $inputLines,
         ?string $occurredAt = null,
         ?string $reason = null,
+        ?string $sourceType = null,
+        ?string $sourcePublicId = null,
+        bool $occurredAtAuthorized = false,
     ) {
         return DB::transaction(function () use (
             $organization,
@@ -34,8 +38,14 @@ class InventoryReceiptService
             $inputLines,
             $occurredAt,
             $reason,
+            $sourceType,
+            $sourcePublicId,
+            $occurredAtAuthorized,
         ) {
-            $location = $this->locations->active($organization, $locationPublicId);
+            $location = $this->locations->active(
+                $organization,
+                $locationPublicId,
+            );
             $lines = [];
 
             foreach ($inputLines as $input) {
@@ -60,6 +70,15 @@ class InventoryReceiptService
                 ];
             }
 
+            $authorizedTime = $occurredAtAuthorized && $occurredAt !== null
+                ? CarbonImmutable::parse($occurredAt)
+                : $this->backdates->occurredAt(
+                    $organization,
+                    $actor,
+                    $occurredAt,
+                    $reason,
+                );
+
             return $this->poster->post(
                 $organization,
                 $actor,
@@ -68,12 +87,9 @@ class InventoryReceiptService
                 $lines,
                 new InventoryPostingContext(
                     reason: $reason,
-                    occurredAt: $this->backdates->occurredAt(
-                        $organization,
-                        $actor,
-                        $occurredAt,
-                        $reason,
-                    ),
+                    occurredAt: $authorizedTime,
+                    sourceReferenceType: $sourceType,
+                    sourceReferencePublicId: $sourcePublicId,
                 ),
             );
         }, 3);

@@ -154,3 +154,5 @@ Route::prefix('v1')
             });
         });
     });
+
+require __DIR__.'/api/procurement.php';
