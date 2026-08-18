@@ -37,18 +37,30 @@ class MovementReversalService
             );
         }
 
-        $existingRetry = InventoryMovement::query()
+        if (in_array($original->source_reference_type, [
+            'stock_count',
+            'stock_transfer',
+            'stock_transfer_cancel',
+        ], true)) {
+            throw new InventoryDomainException(
+                'inventory_document_movement_reversal_forbidden',
+                'This movement is owned by an operational document workflow.',
+                409,
+            );
+        }
+
+        $retry = InventoryMovement::query()
             ->where('organization_id', $organization->id)
             ->where('idempotency_key', $idempotencyKey)
             ->first();
 
-        if ($existingRetry !== null) {
+        if ($retry !== null) {
             if (
-                $existingRetry->movement_type === InventoryMovementType::Reversal
-                && $existingRetry->reversal_of_movement_id === $original->id
-                && $existingRetry->business_reason === $reason
+                $retry->movement_type === InventoryMovementType::Reversal
+                && $retry->reversal_of_movement_id === $original->id
+                && $retry->business_reason === $reason
             ) {
-                return $existingRetry->load('lines');
+                return $retry->load('lines');
             }
 
             throw new InventoryDomainException(
@@ -58,12 +70,9 @@ class MovementReversalService
             );
         }
 
-        $alreadyReversed = InventoryMovement::query()
-            ->where('organization_id', $organization->id)
+        if (InventoryMovement::query()
             ->where('reversal_of_movement_id', $original->id)
-            ->exists();
-
-        if ($alreadyReversed) {
+            ->exists()) {
             throw new InventoryDomainException(
                 'inventory_movement_already_reversed',
                 'The inventory movement has already been reversed.',
@@ -81,7 +90,7 @@ class MovementReversalService
             'quantity_base' => $this->math->negate($line->quantity_base),
             'unit_cost_snapshot' => $line->unit_cost_snapshot,
             'inventory_value_delta' => $line->inventory_value_delta === null
-                ? null
+                ? '0.000000'
                 : $this->math->negate($line->inventory_value_delta),
         ])->all();
 
@@ -92,11 +101,13 @@ class MovementReversalService
                 InventoryMovementType::Reversal,
                 $idempotencyKey,
                 $lines,
-                $reason,
-                $original,
+                new InventoryPostingContext(
+                    reason: $reason,
+                    reversalOf: $original,
+                ),
             );
         } catch (QueryException $exception) {
-            if ((int) $exception->errorInfo[1] === 1062) {
+            if ((int) ($exception->errorInfo[1] ?? 0) === 1062) {
                 throw new InventoryDomainException(
                     'inventory_movement_already_reversed',
                     'The inventory movement has already been reversed.',

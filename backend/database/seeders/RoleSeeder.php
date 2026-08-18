@@ -37,11 +37,13 @@ class RoleSeeder extends Seeder
             PermissionCode::PricingManage,
             PermissionCode::InventoryView,
             PermissionCode::InventoryLocationManage,
+            PermissionCode::InventoryPolicyManage,
             PermissionCode::InventoryReceive,
             PermissionCode::InventoryTransfer,
             PermissionCode::InventoryReserve,
             PermissionCode::InventoryCount,
             PermissionCode::InventoryAdjust,
+            PermissionCode::InventoryAdjustApprove,
             PermissionCode::InventoryReverse,
             PermissionCode::AuditView,
         ]));

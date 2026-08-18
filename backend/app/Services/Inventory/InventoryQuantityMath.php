@@ -24,14 +24,18 @@ class InventoryQuantityMath
 
     public function negate(string|int|float $value): string
     {
-        return $this->scalar(
-            'CAST(-CAST(? AS DECIMAL(30,6)) AS CHAR)',
-            [$value],
-        );
+        return $this->scalar('CAST(-CAST(? AS DECIMAL(30,6)) AS CHAR)', [$value]);
     }
 
-    public function add(string|int|float $left, string|int|float $right): string
+    public function absolute(string|int|float $value): string
     {
+        return $this->scalar('CAST(ABS(CAST(? AS DECIMAL(30,6))) AS CHAR)', [$value]);
+    }
+
+    public function add(
+        string|int|float $left,
+        string|int|float $right,
+    ): string {
         return $this->scalar(
             'CAST(CAST(? AS DECIMAL(30,6)) + CAST(? AS DECIMAL(30,6)) AS CHAR)',
             [$left, $right],
@@ -40,7 +44,39 @@ class InventoryQuantityMath
 
     public function isNegative(string|int|float $value): bool
     {
-        return str_starts_with(trim((string) $value), '-');
+        return $this->compare($value, 0) < 0;
+    }
+
+    public function isPositive(string|int|float $value): bool
+    {
+        return $this->compare($value, 0) > 0;
+    }
+
+    public function isZero(string|int|float $value): bool
+    {
+        return $this->compare($value, 0) === 0;
+    }
+
+    public function greaterThan(
+        string|int|float $left,
+        string|int|float $right,
+    ): bool {
+        return $this->compare($left, $right) > 0;
+    }
+
+    private function compare(
+        string|int|float $left,
+        string|int|float $right,
+    ): int {
+        $row = DB::selectOne(
+            'SELECT CASE '
+            .'WHEN CAST(? AS DECIMAL(30,6)) < CAST(? AS DECIMAL(30,6)) THEN -1 '
+            .'WHEN CAST(? AS DECIMAL(30,6)) > CAST(? AS DECIMAL(30,6)) THEN 1 '
+            .'ELSE 0 END AS value',
+            [$left, $right, $left, $right],
+        );
+
+        return (int) $row->value;
     }
 
     private function scalar(string $expression, array $bindings): string

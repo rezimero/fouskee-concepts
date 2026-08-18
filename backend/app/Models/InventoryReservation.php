@@ -5,24 +5,17 @@ namespace App\Models;
 use App\Enums\InventoryReservationStatus;
 use App\Models\Concerns\HasPublicId;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class InventoryReservation extends Model
 {
     use HasPublicId;
 
     protected $fillable = [
-        'organization_id',
-        'inventory_location_id',
-        'product_id',
-        'inventory_lot_id',
-        'source_reference_type',
-        'source_reference_public_id',
-        'quantity_base',
-        'status',
-        'expires_at',
-        'created_by_user_id',
-        'released_by_user_id',
-        'released_at',
+        'organization_id', 'inventory_location_id', 'product_id',
+        'inventory_lot_id', 'source_reference_type',
+        'source_reference_public_id', 'quantity_base', 'status',
+        'expires_at', 'created_by_user_id', 'released_by_user_id', 'released_at',
     ];
 
     protected function casts(): array
@@ -33,5 +26,10 @@ class InventoryReservation extends Model
             'expires_at' => 'datetime',
             'released_at' => 'datetime',
         ];
+    }
+
+    public function lot(): BelongsTo
+    {
+        return $this->belongsTo(InventoryLot::class, 'inventory_lot_id');
     }
 }

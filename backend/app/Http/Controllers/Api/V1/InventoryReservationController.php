@@ -20,10 +20,11 @@ class InventoryReservationController extends Controller
             $organization,
             $request->user(),
             $request->validated(),
-        );
+        )->load('lot');
 
         return response()->json(['data' => [
             'id' => $reservation->public_id,
+            'lot_id' => $reservation->lot?->public_id,
             'quantity_base' => $reservation->quantity_base,
             'status' => $reservation->status->value,
             'expires_at' => $reservation->expires_at?->toISOString(),

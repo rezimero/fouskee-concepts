@@ -20,6 +20,7 @@ enum PermissionCode: string
     case PricingManage = 'pricing.manage';
     case InventoryView = 'inventory.view';
     case InventoryLocationManage = 'inventory.locations.manage';
+    case InventoryPolicyManage = 'inventory.policy.manage';
     case InventoryReceive = 'inventory.receive';
     case InventoryTransfer = 'inventory.transfer';
     case InventoryReserve = 'inventory.reserve';

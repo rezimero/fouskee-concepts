@@ -1,6 +1,6 @@
 # ADR-005 — Inventory Ledger and Stock Integrity
 
-**Status:** Proposed for v0.3A implementation  
+**Status:** Accepted / implemented in v0.3A; extended by v0.3B
 **Date:** 2026-08-17
 
 ## Context

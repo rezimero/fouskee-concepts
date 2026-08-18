@@ -10,16 +10,9 @@ class InventoryBalance extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'organization_id',
-        'inventory_location_id',
-        'product_id',
-        'inventory_lot_id',
-        'lot_scope_key',
-        'quantity_on_hand_base',
-        'inventory_value',
-        'weighted_average_unit_cost',
-        'version',
-        'projected_at',
+        'organization_id', 'inventory_location_id', 'product_id',
+        'inventory_lot_id', 'lot_scope_key', 'quantity_on_hand_base',
+        'inventory_value', 'weighted_average_unit_cost', 'version', 'projected_at',
     ];
 
     protected function casts(): array
@@ -41,5 +34,10 @@ class InventoryBalance extends Model
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
+    }
+
+    public function lot(): BelongsTo
+    {
+        return $this->belongsTo(InventoryLot::class, 'inventory_lot_id');
     }
 }

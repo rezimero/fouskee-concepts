@@ -21,11 +21,15 @@ class PostReceiptRequest extends FormRequest
         return [
             'idempotency_key' => ['required', 'string', 'min:8', 'max:120'],
             'location_id' => ['required', 'string', 'size:26'],
+            'occurred_at' => ['nullable', 'date', 'before_or_equal:now'],
             'lines' => ['required', 'array', 'min:1', 'max:100'],
             'lines.*.product_id' => ['required', 'string', 'size:26'],
             'lines.*.packaging_id' => ['nullable', 'string', 'size:26'],
+            'lines.*.lot_id' => ['nullable', 'string', 'size:26', 'prohibits:lines.*.lot_code'],
+            'lines.*.lot_code' => ['nullable', 'string', 'max:100'],
+            'lines.*.expiry_date' => ['nullable', 'date'],
             'lines.*.quantity' => ['required', 'numeric', 'gt:0'],
-            'lines.*.unit_cost_base' => ['nullable', 'numeric', 'gte:0'],
+            'lines.*.unit_cost_base' => ['required', 'numeric', 'gte:0'],
         ];
     }
 }

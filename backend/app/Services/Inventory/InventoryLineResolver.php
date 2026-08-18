@@ -20,19 +20,19 @@ class InventoryLineResolver
         $product = Product::query()
             ->where('organization_id', $organization->id)
             ->where('public_id', $line['product_id'])
+            ->where('status', 'active')
             ->firstOrFail();
 
         $packaging = $this->packaging($product->id, $line['packaging_id'] ?? null);
         $conversion = $packaging?->conversion_to_base ?? '1.000000';
         $entered = (string) ($signed ? $line['quantity_delta'] : $line['quantity']);
-        $base = $this->math->multiply($entered, $conversion);
 
         return [
             'product' => $product,
             'packaging' => $packaging,
             'entered_quantity' => $entered,
             'conversion_to_base_snapshot' => $conversion,
-            'quantity_base' => $base,
+            'quantity_base' => $this->math->multiply($entered, $conversion),
             'unit_cost_snapshot' => isset($line['unit_cost_base'])
                 ? (string) $line['unit_cost_base']
                 : null,
@@ -48,6 +48,7 @@ class InventoryLineResolver
         return ProductPackaging::query()
             ->where('product_id', $productId)
             ->where('public_id', $publicId)
+            ->where('status', 'active')
             ->firstOrFail();
     }
 }

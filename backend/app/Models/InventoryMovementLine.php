@@ -13,16 +13,10 @@ class InventoryMovementLine extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'inventory_movement_id',
-        'inventory_location_id',
-        'product_id',
-        'product_packaging_id',
-        'inventory_lot_id',
-        'entered_quantity',
-        'conversion_to_base_snapshot',
-        'quantity_base',
-        'unit_cost_snapshot',
-        'inventory_value_delta',
+        'inventory_movement_id', 'inventory_location_id', 'product_id',
+        'product_packaging_id', 'inventory_lot_id', 'entered_quantity',
+        'conversion_to_base_snapshot', 'quantity_base',
+        'unit_cost_snapshot', 'inventory_value_delta',
     ];
 
     protected function casts(): array
@@ -54,5 +48,10 @@ class InventoryMovementLine extends Model
     public function packaging(): BelongsTo
     {
         return $this->belongsTo(ProductPackaging::class, 'product_packaging_id');
+    }
+
+    public function lot(): BelongsTo
+    {
+        return $this->belongsTo(InventoryLot::class, 'inventory_lot_id');
     }
 }

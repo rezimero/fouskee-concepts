@@ -4,7 +4,6 @@ namespace App\Services\Inventory;
 
 use App\Enums\InventoryReservationStatus;
 use App\Exceptions\InventoryDomainException;
-use App\Models\InventoryLocation;
 use App\Models\InventoryReservation;
 use App\Models\Organization;
 use App\Models\Product;
@@ -16,6 +15,8 @@ class InventoryReservationService
 {
     public function __construct(
         private readonly InventoryBalanceService $balances,
+        private readonly InventoryLocationResolver $locations,
+        private readonly InventoryLotService $lots,
         private readonly InventoryQuantityMath $math,
         private readonly AuditRecorder $audit,
     ) {}
@@ -26,34 +27,39 @@ class InventoryReservationService
         array $data,
     ): InventoryReservation {
         return DB::transaction(function () use ($organization, $actor, $data) {
-            $location = InventoryLocation::query()
-                ->where('organization_id', $organization->id)
-                ->where('public_id', $data['location_id'])
-                ->firstOrFail();
+            $location = $this->locations->active($organization, $data['location_id']);
 
             $product = Product::query()
                 ->where('organization_id', $organization->id)
                 ->where('public_id', $data['product_id'])
+                ->where('status', 'active')
                 ->firstOrFail();
+
+            $lot = $this->lots->find(
+                $organization,
+                $product,
+                $data['lot_id'] ?? null,
+            );
 
             $balance = $this->balances->lock(
                 $organization->id,
                 $location->id,
                 $product->id,
+                $lot?->id,
             );
 
             $reserved = $this->balances->reservedBase(
                 $organization->id,
                 $location->id,
                 $product->id,
+                $lot?->id,
             );
 
-            $available = $this->math->add(
-                $balance->quantity_on_hand_base,
-                $this->math->negate($reserved),
-            );
             $remaining = $this->math->add(
-                $available,
+                $this->math->add(
+                    $balance->quantity_on_hand_base,
+                    $this->math->negate($reserved),
+                ),
                 $this->math->negate((string) $data['quantity_base']),
             );
 
@@ -69,6 +75,7 @@ class InventoryReservationService
                 'organization_id' => $organization->id,
                 'inventory_location_id' => $location->id,
                 'product_id' => $product->id,
+                'inventory_lot_id' => $lot?->id,
                 'quantity_base' => $data['quantity_base'],
                 'source_reference_type' => $data['source_reference_type'] ?? null,
                 'source_reference_public_id' => $data['source_reference_public_id'] ?? null,
@@ -82,7 +89,10 @@ class InventoryReservationService
                 actor: $actor,
                 subject: $reservation,
                 organizationId: $organization->id,
-                after: ['quantity_base' => $reservation->quantity_base],
+                after: [
+                    'quantity_base' => $reservation->quantity_base,
+                    'lot_id' => $lot?->public_id,
+                ],
             );
 
             return $reservation;
