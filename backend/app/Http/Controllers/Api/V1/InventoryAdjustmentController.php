@@ -25,6 +25,7 @@ class InventoryAdjustmentController extends Controller
             $data['location_id'],
             $data['lines'],
             trim((string) $request->header('X-Privileged-Reason')),
+            $data['occurred_at'] ?? null,
         ));
     }
 }

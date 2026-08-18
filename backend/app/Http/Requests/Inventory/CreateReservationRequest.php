@@ -16,6 +16,7 @@ class CreateReservationRequest extends FormRequest
         return [
             'location_id' => ['required', 'string', 'size:26'],
             'product_id' => ['required', 'string', 'size:26'],
+            'lot_id' => ['nullable', 'string', 'size:26'],
             'quantity_base' => ['required', 'numeric', 'gt:0'],
             'source_reference_type' => ['nullable', 'string', 'max:80'],
             'source_reference_public_id' => ['nullable', 'string', 'max:64'],

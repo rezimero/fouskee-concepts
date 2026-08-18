@@ -16,6 +16,7 @@ class InventoryAdjustmentTest extends InventoryTestCase
                 'lines' => [[
                     'product_id' => $this->product->public_id,
                     'quantity_delta' => 10,
+                    'unit_cost_base' => 1000,
                 ]],
             ])
             ->assertUnprocessable()
@@ -34,10 +35,14 @@ class InventoryAdjustmentTest extends InventoryTestCase
             'lines' => [[
                 'product_id' => $this->product->public_id,
                 'quantity_delta' => 10,
+                'unit_cost_base' => 1000,
             ]],
         ])
             ->assertSuccessful()
             ->assertJsonPath('data.type', 'adjustment')
-            ->assertJsonPath('data.business_reason', 'Opening physical stock verification');
+            ->assertJsonPath(
+                'data.business_reason',
+                'Opening physical stock verification',
+            );
     }
 }

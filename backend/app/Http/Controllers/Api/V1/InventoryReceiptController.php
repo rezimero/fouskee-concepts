@@ -24,6 +24,8 @@ class InventoryReceiptController extends Controller
             $data['idempotency_key'],
             $data['location_id'],
             $data['lines'],
+            $data['occurred_at'] ?? null,
+            $request->header('X-Privileged-Reason'),
         ));
     }
 }

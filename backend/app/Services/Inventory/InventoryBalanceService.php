@@ -11,18 +11,24 @@ class InventoryBalanceService
 {
     public function __construct(
         private readonly InventoryQuantityMath $math,
+        private readonly InventoryBalanceKey $keys,
     ) {}
 
-    public function lock(int $organizationId, int $locationId, int $productId): InventoryBalance
-    {
+    public function lock(
+        int $organizationId,
+        int $locationId,
+        int $productId,
+        ?int $lotId = null,
+    ): InventoryBalance {
         $scope = [
             'organization_id' => $organizationId,
             'inventory_location_id' => $locationId,
             'product_id' => $productId,
-            'lot_scope_key' => 'none',
+            'lot_scope_key' => $this->keys->scopeKey($lotId),
         ];
 
         DB::table('inventory_balances')->insertOrIgnore($scope + [
+            'inventory_lot_id' => $lotId,
             'quantity_on_hand_base' => 0,
             'inventory_value' => 0,
             'weighted_average_unit_cost' => 0,
@@ -35,8 +41,10 @@ class InventoryBalanceService
             ->firstOrFail();
     }
 
-    public function assertAvailable(InventoryBalance $balance, string $delta): void
-    {
+    public function assertAvailable(
+        InventoryBalance $balance,
+        string $delta,
+    ): void {
         if (! $this->math->isNegative($delta)) {
             return;
         }
@@ -45,6 +53,7 @@ class InventoryBalanceService
             $balance->organization_id,
             $balance->inventory_location_id,
             $balance->product_id,
+            $balance->inventory_lot_id,
         );
 
         $available = $this->math->add(
@@ -62,28 +71,17 @@ class InventoryBalanceService
         }
     }
 
-    public function apply(InventoryBalance $balance, string $quantityDelta): void
-    {
-        DB::table('inventory_balances')
-            ->where('id', $balance->id)
-            ->update([
-                'quantity_on_hand_base' => DB::raw(
-                    "quantity_on_hand_base + CAST('{$quantityDelta}' AS DECIMAL(30,6))"
-                ),
-                'version' => DB::raw('version + 1'),
-                'projected_at' => now(),
-            ]);
-    }
-
     public function reservedBase(
         int $organizationId,
         int $locationId,
         int $productId,
+        ?int $lotId = null,
     ): string {
         return (string) InventoryReservation::query()
             ->where('organization_id', $organizationId)
             ->where('inventory_location_id', $locationId)
             ->where('product_id', $productId)
+            ->where('inventory_lot_id', $lotId)
             ->where('status', 'active')
             ->where(fn ($query) => $query
                 ->whereNull('expires_at')

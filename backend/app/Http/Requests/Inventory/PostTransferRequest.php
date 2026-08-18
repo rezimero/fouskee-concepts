@@ -22,9 +22,11 @@ class PostTransferRequest extends FormRequest
             'idempotency_key' => ['required', 'string', 'min:8', 'max:120'],
             'source_location_id' => ['required', 'string', 'size:26'],
             'destination_location_id' => ['required', 'string', 'size:26'],
+            'occurred_at' => ['nullable', 'date', 'before_or_equal:now'],
             'lines' => ['required', 'array', 'min:1', 'max:100'],
             'lines.*.product_id' => ['required', 'string', 'size:26'],
             'lines.*.packaging_id' => ['nullable', 'string', 'size:26'],
+            'lines.*.lot_id' => ['nullable', 'string', 'size:26'],
             'lines.*.quantity' => ['required', 'numeric', 'gt:0'],
         ];
     }

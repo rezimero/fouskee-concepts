@@ -25,6 +25,8 @@ class InventoryTransferController extends Controller
             $data['source_location_id'],
             $data['destination_location_id'],
             $data['lines'],
+            $data['occurred_at'] ?? null,
+            $request->header('X-Privileged-Reason'),
         ));
     }
 }

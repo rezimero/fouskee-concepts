@@ -10,13 +10,20 @@ use Illuminate\Http\Request;
 
 class InventoryMovementController extends Controller
 {
-    public function index(Request $request, CurrentOrganization $currentOrganization)
-    {
+    public function index(
+        Request $request,
+        CurrentOrganization $currentOrganization,
+    ) {
         $organization = $currentOrganization->for($request->user());
 
         return InventoryMovementResource::collection(
             InventoryMovement::query()
-                ->with(['lines.location', 'lines.product', 'lines.packaging'])
+                ->with([
+                    'lines.location',
+                    'lines.product',
+                    'lines.packaging',
+                    'lines.lot',
+                ])
                 ->where('organization_id', $organization->id)
                 ->orderByDesc('id')
                 ->paginate(max(1, min((int) $request->query('per_page', 25), 100))),
@@ -32,7 +39,13 @@ class InventoryMovementController extends Controller
 
         return new InventoryMovementResource(
             InventoryMovement::query()
-                ->with(['lines.location', 'lines.product', 'lines.packaging', 'reversalOf'])
+                ->with([
+                    'lines.location',
+                    'lines.product',
+                    'lines.packaging',
+                    'lines.lot',
+                    'reversalOf',
+                ])
                 ->where('organization_id', $organization->id)
                 ->where('public_id', $movementPublicId)
                 ->firstOrFail(),

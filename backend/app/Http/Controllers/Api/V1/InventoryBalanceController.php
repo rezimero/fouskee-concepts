@@ -20,7 +20,7 @@ class InventoryBalanceController extends Controller
         $organization = $currentOrganization->for($request->user());
 
         $rows = InventoryBalance::query()
-            ->with(['location', 'product'])
+            ->with(['location', 'product', 'lot'])
             ->where('organization_id', $organization->id)
             ->orderBy('inventory_location_id')
             ->orderBy('product_id')
@@ -30,17 +30,21 @@ class InventoryBalanceController extends Controller
                     $organization->id,
                     $row->inventory_location_id,
                     $row->product_id,
+                    $row->inventory_lot_id,
                 );
 
                 return [
                     'location_id' => $row->location->public_id,
                     'product_id' => $row->product->public_id,
+                    'lot_id' => $row->lot?->public_id,
                     'on_hand_base' => $row->quantity_on_hand_base,
                     'reserved_base' => $reserved,
                     'available_base' => $math->add(
                         $row->quantity_on_hand_base,
                         $math->negate($reserved),
                     ),
+                    'inventory_value' => $row->inventory_value,
+                    'weighted_average_unit_cost' => $row->weighted_average_unit_cost,
                 ];
             });
 

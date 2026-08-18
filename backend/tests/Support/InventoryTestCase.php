@@ -50,18 +50,7 @@ abstract class InventoryTestCase extends TestCase
             'status' => 'active',
         ]);
 
-        $this->user = User::factory()->create([
-            'status' => UserStatus::Active,
-            'default_organization_id' => $this->organization->id,
-            'mfa_required' => true,
-            'two_factor_confirmed_at' => now(),
-        ]);
-
-        app(RoleAssignmentService::class)->assign(
-            $this->user,
-            Role::query()->where('code', 'superadmin')->firstOrFail(),
-        );
-
+        $this->user = $this->superadmin('inventory-maker@example.test');
         Sanctum::actingAs($this->user);
 
         $kg = UnitOfMeasure::query()->where('code', 'KG')->firstOrFail();
@@ -87,6 +76,24 @@ abstract class InventoryTestCase extends TestCase
         ]);
     }
 
+    protected function superadmin(string $email): User
+    {
+        $user = User::factory()->create([
+            'email' => $email,
+            'status' => UserStatus::Active,
+            'default_organization_id' => $this->organization->id,
+            'mfa_required' => true,
+            'two_factor_confirmed_at' => now(),
+        ]);
+
+        app(RoleAssignmentService::class)->assign(
+            $user,
+            Role::query()->where('code', 'superadmin')->firstOrFail(),
+        );
+
+        return $user;
+    }
+
     protected function location(string $code): InventoryLocation
     {
         return InventoryLocation::query()->create([
@@ -102,6 +109,8 @@ abstract class InventoryTestCase extends TestCase
         InventoryLocation $location,
         int|float $quantity = 2,
         string $key = 'receipt-key-0001',
+        int|float $unitCost = 1000,
+        array $extra = [],
     ) {
         return $this->withHeader('Idempotency-Key', $key)
             ->postJson('/api/v1/inventory/receipts', [
@@ -110,6 +119,8 @@ abstract class InventoryTestCase extends TestCase
                     'product_id' => $this->product->public_id,
                     'packaging_id' => $this->packaging->public_id,
                     'quantity' => $quantity,
+                    'unit_cost_base' => $unitCost,
+                    ...$extra,
                 ]],
             ]);
     }
