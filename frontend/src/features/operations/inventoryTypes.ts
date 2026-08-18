@@ -1,9 +1,12 @@
+export type InventoryLocationType = 'warehouse' | 'store' | 'transit'
+export type InventoryLocationStatus = 'active' | 'inactive' | 'archived'
+
 export type InventoryLocation = {
   id: string
   code: string
   name: string
-  type: string
-  status: string
+  type: InventoryLocationType
+  status: InventoryLocationStatus
 }
 
 export type InventoryLot = {

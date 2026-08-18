@@ -9,6 +9,7 @@ import { PriceListsPage } from '../features/master-data/pages/PriceListsPage'
 import { ProductsPage } from '../features/master-data/pages/ProductsPage'
 import { SuppliersPage } from '../features/master-data/pages/SuppliersPage'
 import { InventoryPage } from '../features/operations/pages/InventoryPage'
+import { LocationsPage } from '../features/operations/pages/LocationsPage'
 import { PurchaseOrdersPage } from '../features/operations/pages/PurchaseOrdersPage'
 import { ReceivingPage } from '../features/operations/pages/ReceivingPage'
 import { StockCountsPage } from '../features/operations/pages/StockCountsPage'
@@ -49,6 +50,7 @@ export function AppRoutes() {
         <Route path="/catalog/setup" element={permitted('catalog.manage', <CatalogSetupPage />)} />
         <Route path="/price-lists" element={permitted('pricing.view', <PriceListsPage />)} />
         <Route path="/inventory" element={permitted('inventory.view', <InventoryPage />)} />
+        <Route path="/inventory/locations" element={permitted('inventory.view', <LocationsPage />)} />
         <Route path="/inventory/counts" element={permitted('inventory.view', <StockCountsPage />)} />
         <Route path="/inventory/transfers" element={permitted('inventory.view', <TransfersPage />)} />
         <Route path="/procurement/purchase-orders" element={permitted('procurement.view', <PurchaseOrdersPage />)} />

@@ -23,6 +23,7 @@ Primary workspaces are:
 
 - command overview;
 - stock intelligence;
+- inventory location administration;
 - stock counts;
 - controlled transfers;
 - purchase orders;
@@ -49,6 +50,17 @@ Laravel remains authoritative for:
 
 The frontend must not reproduce those business rules as an alternative decision
 engine.
+
+### Controlled inventory topology
+
+Physical stock locations are visible to `inventory.view`. Creation is exposed
+only to `inventory.locations.manage` and still passes through the existing
+server endpoint.
+
+The system transfer custody code `__TRANSIT__` is reserved and cannot be
+manually created through that endpoint. Location deactivation/archive is not
+introduced until lifecycle rules for non-empty locations are explicitly
+defined.
 
 ### Permission-aware controls
 

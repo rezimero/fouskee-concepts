@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\Inventory;
 
+use App\Models\InventoryLocation;
+use Closure;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -21,6 +23,15 @@ class StoreInventoryLocationRequest extends FormRequest
                 'required',
                 'string',
                 'max:60',
+                function (string $attribute, mixed $value, Closure $fail): void {
+                    if (
+                        is_string($value)
+                        && strtoupper(trim($value))
+                            === InventoryLocation::SYSTEM_TRANSIT_CODE
+                    ) {
+                        $fail('The system transit location code is reserved.');
+                    }
+                },
                 Rule::unique('inventory_locations', 'code')
                     ->where('organization_id', $organizationId),
             ],

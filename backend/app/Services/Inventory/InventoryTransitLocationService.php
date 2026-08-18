@@ -18,7 +18,7 @@ class InventoryTransitLocationService
         $location = InventoryLocation::query()->firstOrCreate(
             [
                 'organization_id' => $organization->id,
-                'code' => '__TRANSIT__',
+                'code' => InventoryLocation::SYSTEM_TRANSIT_CODE,
             ],
             [
                 'name' => 'Controlled In-Transit Stock',

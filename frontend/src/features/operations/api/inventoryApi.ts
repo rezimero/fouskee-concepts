@@ -3,6 +3,7 @@ import { idempotencyKey } from '../lib/format'
 import type {
   InventoryBalance,
   InventoryLocation,
+  InventoryLocationType,
   InventoryLot,
   InventoryMovement,
   StockCount,
@@ -25,6 +26,18 @@ export const inventoryApi = {
   async locations() {
     const { data } = await http.get<Collection<InventoryLocation>>(
       '/api/v1/inventory/locations',
+    )
+    return data.data
+  },
+
+  async createLocation(payload: {
+    code: string
+    name: string
+    type: InventoryLocationType
+  }) {
+    const { data } = await http.post<Entity<InventoryLocation>>(
+      '/api/v1/inventory/locations',
+      payload,
     )
     return data.data
   },

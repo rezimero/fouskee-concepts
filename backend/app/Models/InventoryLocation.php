@@ -12,6 +12,8 @@ class InventoryLocation extends Model
 {
     use HasPublicId;
 
+    public const SYSTEM_TRANSIT_CODE = '__TRANSIT__';
+
     protected $fillable = [
         'organization_id',
         'code',

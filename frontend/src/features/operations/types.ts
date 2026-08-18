@@ -1,6 +1,8 @@
 export type {
   InventoryBalance,
   InventoryLocation,
+  InventoryLocationStatus,
+  InventoryLocationType,
   InventoryLot,
   InventoryMovement,
   InventoryMovementLine,
