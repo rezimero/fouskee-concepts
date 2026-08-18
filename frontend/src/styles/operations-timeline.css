@@ -1,0 +1,41 @@
+.ops-timeline {
+  margin-top: 18px;
+  display: grid;
+  gap: 0;
+}
+
+.ops-timeline__item {
+  min-height: 64px;
+  display: grid;
+  grid-template-columns: 16px minmax(150px, 1fr) auto minmax(160px, 0.8fr);
+  gap: 12px;
+  align-items: center;
+  border-bottom: 1px solid var(--fc-border);
+}
+
+.ops-timeline__item:last-child {
+  border-bottom: 0;
+}
+
+.ops-timeline__marker {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--fc-green);
+  box-shadow: 0 0 0 5px rgba(155, 210, 60, 0.11);
+}
+
+.ops-timeline__item > div:nth-child(2) {
+  display: grid;
+  gap: 3px;
+}
+
+.ops-timeline__item small,
+.ops-timeline__source {
+  color: var(--fc-muted);
+  font-size: 0.7rem;
+}
+
+.ops-timeline__source {
+  text-align: right;
+}

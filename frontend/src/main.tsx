@@ -9,6 +9,11 @@ import './styles/components.css'
 import './styles/branding.css'
 import './styles/master-data.css'
 import './styles/forms.css'
+import './styles/operations.css'
+import './styles/operations-tables.css'
+import './styles/operations-timeline.css'
+import './styles/operations-forms.css'
+import './styles/operations-responsive.css'
 import './styles/responsive.css'
 
 createRoot(document.getElementById('root')!).render(

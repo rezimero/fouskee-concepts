@@ -1,0 +1,130 @@
+.ops-line-stack {
+  display: grid;
+  gap: 12px;
+}
+
+.ops-line-row {
+  padding: 15px;
+  display: grid;
+  gap: 14px;
+  border: 1px solid var(--fc-border);
+  border-radius: var(--radius-md);
+  background: #faf8f3;
+}
+
+.ops-line-row__heading {
+  min-height: 34px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ops-line-row__heading small {
+  color: var(--fc-muted);
+  font-size: 0.7rem;
+}
+
+.ops-line-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.ops-line-grid--3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.ops-line-grid--4 {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.ops-match-card {
+  padding: 18px;
+  display: grid;
+  gap: 16px;
+  border: 1px solid rgba(40, 122, 55, 0.16);
+  border-radius: var(--radius-md);
+  background: var(--fc-success-soft);
+}
+
+.ops-match-card--risk {
+  border-color: rgba(180, 35, 24, 0.15);
+  background: var(--fc-danger-soft);
+}
+
+.ops-match-card__header {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.ops-match-card__header h3 {
+  margin: 5px 0 0;
+}
+
+.ops-match-summary {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.ops-match-summary span {
+  padding: 10px 12px;
+  display: grid;
+  gap: 3px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.78);
+  color: var(--fc-muted);
+  font-size: 0.7rem;
+}
+
+.ops-match-summary strong {
+  color: var(--fc-charcoal);
+  font-size: 0.8rem;
+}
+
+.ops-exception-list {
+  padding: 12px;
+  display: flex;
+  gap: 10px;
+  border-radius: 10px;
+  color: var(--fc-danger);
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.ops-exception-list > div {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.ops-exception-list span {
+  padding: 4px 7px;
+  border-radius: 7px;
+  background: rgba(180, 35, 24, 0.08);
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: capitalize;
+}
+
+.field select {
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 14px;
+  border: 1px solid var(--fc-border);
+  border-radius: var(--radius-sm);
+  outline: none;
+  color: var(--fc-charcoal);
+  background: white;
+}
+
+.field select:focus {
+  border-color: rgba(95, 143, 24, 0.6);
+  box-shadow: 0 0 0 4px rgba(155, 210, 60, 0.13);
+}
+
+.sheet--wide {
+  width: min(780px, 100vw);
+  max-width: min(780px, 100vw);
+}
