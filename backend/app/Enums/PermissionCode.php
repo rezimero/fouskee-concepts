@@ -38,6 +38,10 @@ enum PermissionCode: string
     case ProcurementInvoice = 'procurement.invoice';
     case ProcurementMatch = 'procurement.match';
     case ProcurementExceptionApprove = 'procurement.exception.approve';
+    case SalesView = 'sales.view';
+    case SalesManage = 'sales.manage';
+    case SalesSubmit = 'sales.submit';
+    case SalesApprove = 'sales.approve';
     case AuditView = 'audit.view';
     case AuditExport = 'audit.export';
     case Impersonate = 'security.impersonate';

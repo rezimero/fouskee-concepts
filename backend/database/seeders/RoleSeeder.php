@@ -53,6 +53,10 @@ class RoleSeeder extends Seeder
             PermissionCode::ProcurementInvoice,
             PermissionCode::ProcurementMatch,
             PermissionCode::ProcurementExceptionApprove,
+            PermissionCode::SalesView,
+            PermissionCode::SalesManage,
+            PermissionCode::SalesSubmit,
+            PermissionCode::SalesApprove,
             PermissionCode::AuditView,
         ]));
 
@@ -64,6 +68,7 @@ class RoleSeeder extends Seeder
             PermissionCode::PricingView,
             PermissionCode::InventoryView,
             PermissionCode::ProcurementView,
+            PermissionCode::SalesView,
             PermissionCode::AuditView,
             PermissionCode::AuditExport,
         ]));
@@ -75,11 +80,7 @@ class RoleSeeder extends Seeder
     {
         return Role::query()->updateOrCreate(
             ['code' => $code],
-            [
-                'name' => $name,
-                'scope' => $scope,
-                'is_system' => true,
-            ],
+            ['name' => $name, 'scope' => $scope, 'is_system' => true],
         );
     }
 
