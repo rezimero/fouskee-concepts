@@ -15,8 +15,8 @@ class SalesOrder extends Model
 
     protected $fillable = [
         'organization_id', 'sales_order_number', 'customer_id', 'price_list_id',
-        'status', 'settlement_type', 'currency_code', 'subtotal_amount',
-        'total_amount', 'credit_limit_snapshot',
+        'source_quotation_id', 'status', 'settlement_type', 'currency_code',
+        'subtotal_amount', 'total_amount', 'credit_limit_snapshot',
         'credit_exposure_before_snapshot', 'exception_codes', 'notes',
         'idempotency_key', 'idempotency_fingerprint', 'created_by_user_id',
         'submitted_by_user_id', 'approved_by_user_id', 'cancelled_by_user_id',
@@ -47,6 +47,11 @@ class SalesOrder extends Model
     public function priceList(): BelongsTo
     {
         return $this->belongsTo(PriceList::class);
+    }
+
+    public function sourceQuotation(): BelongsTo
+    {
+        return $this->belongsTo(SalesQuotation::class, 'source_quotation_id');
     }
 
     public function lines(): HasMany
