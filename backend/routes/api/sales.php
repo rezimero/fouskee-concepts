@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\V1\SalesOrderController;
 use App\Http\Controllers\Api\V1\SalesOrderDecisionController;
+use App\Http\Controllers\Api\V1\SalesOrderReservationController;
 use App\Http\Controllers\Api\V1\SalesOrderSubmitController;
 use Illuminate\Support\Facades\Route;
 
@@ -31,6 +32,21 @@ Route::prefix('v1/sales')
             SalesOrderDecisionController::class, 'reject',
         ])->middleware([
             'permission:sales.approve',
+            'privileged.reason',
+        ]);
+
+        Route::get('/orders/{salesOrderPublicId}/reservation', [
+            SalesOrderReservationController::class, 'show',
+        ])->middleware('permission:sales.view');
+
+        Route::post('/orders/{salesOrderPublicId}/reservation', [
+            SalesOrderReservationController::class, 'reserve',
+        ])->middleware('permission:inventory.reserve');
+
+        Route::post('/orders/{salesOrderPublicId}/reservation/release', [
+            SalesOrderReservationController::class, 'release',
+        ])->middleware([
+            'permission:inventory.reserve',
             'privileged.reason',
         ]);
     });

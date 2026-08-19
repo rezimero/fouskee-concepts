@@ -28,6 +28,16 @@ class InventoryReservation extends Model
         ];
     }
 
+    public function location(): BelongsTo
+    {
+        return $this->belongsTo(InventoryLocation::class, 'inventory_location_id');
+    }
+
+    public function product(): BelongsTo
+    {
+        return $this->belongsTo(Product::class);
+    }
+
     public function lot(): BelongsTo
     {
         return $this->belongsTo(InventoryLot::class, 'inventory_lot_id');

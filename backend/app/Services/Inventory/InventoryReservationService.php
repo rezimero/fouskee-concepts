@@ -18,6 +18,7 @@ class InventoryReservationService
         private readonly InventoryLocationResolver $locations,
         private readonly InventoryLotService $lots,
         private readonly InventoryQuantityMath $math,
+        private readonly InventoryReservationOwnershipPolicy $ownership,
         private readonly AuditRecorder $audit,
     ) {}
 
@@ -26,41 +27,79 @@ class InventoryReservationService
         User $actor,
         array $data,
     ): InventoryReservation {
+        $this->ownership->assertAllowed(
+            $data['source_reference_type'] ?? null,
+            false,
+        );
+
+        return $this->performCreate($organization, $actor, $data);
+    }
+
+    public function createOwned(
+        Organization $organization,
+        User $actor,
+        array $data,
+    ): InventoryReservation {
+        $this->ownership->assertAllowed(
+            $data['source_reference_type'] ?? null,
+            true,
+        );
+
+        return $this->performCreate($organization, $actor, $data);
+    }
+
+    public function release(
+        Organization $organization,
+        User $actor,
+        string $publicId,
+    ): InventoryReservation {
+        return $this->performRelease($organization, $actor, $publicId, false);
+    }
+
+    public function releaseOwned(
+        Organization $organization,
+        User $actor,
+        string $publicId,
+    ): InventoryReservation {
+        return $this->performRelease($organization, $actor, $publicId, true);
+    }
+
+    private function performCreate(
+        Organization $organization,
+        User $actor,
+        array $data,
+    ): InventoryReservation {
         return DB::transaction(function () use ($organization, $actor, $data) {
             $location = $this->locations->active($organization, $data['location_id']);
-
             $product = Product::query()
                 ->where('organization_id', $organization->id)
                 ->where('public_id', $data['product_id'])
                 ->where('status', 'active')
                 ->firstOrFail();
-
             $lot = $this->lots->find(
                 $organization,
                 $product,
                 $data['lot_id'] ?? null,
             );
-
             $balance = $this->balances->lock(
                 $organization->id,
                 $location->id,
                 $product->id,
                 $lot?->id,
             );
-
             $reserved = $this->balances->reservedBase(
                 $organization->id,
                 $location->id,
                 $product->id,
                 $lot?->id,
             );
-
-            $remaining = $this->math->add(
-                $this->math->add(
-                    $balance->quantity_on_hand_base,
-                    $this->math->negate($reserved),
-                ),
-                $this->math->negate((string) $data['quantity_base']),
+            $available = $this->math->subtract(
+                $balance->quantity_on_hand_base,
+                $reserved,
+            );
+            $remaining = $this->math->subtract(
+                $available,
+                (string) $data['quantity_base'],
             );
 
             if ($this->math->isNegative($remaining)) {
@@ -99,17 +138,25 @@ class InventoryReservationService
         }, 3);
     }
 
-    public function release(
+    private function performRelease(
         Organization $organization,
         User $actor,
         string $publicId,
+        bool $allowOwned,
     ): InventoryReservation {
-        return DB::transaction(function () use ($organization, $actor, $publicId) {
+        return DB::transaction(function () use (
+            $organization, $actor, $publicId, $allowOwned,
+        ) {
             $reservation = InventoryReservation::query()
                 ->where('organization_id', $organization->id)
                 ->where('public_id', $publicId)
                 ->lockForUpdate()
                 ->firstOrFail();
+
+            $this->ownership->assertAllowed(
+                $reservation->source_reference_type,
+                $allowOwned,
+            );
 
             if ($reservation->status !== InventoryReservationStatus::Active) {
                 throw new InventoryDomainException(
