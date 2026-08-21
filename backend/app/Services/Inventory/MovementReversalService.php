@@ -16,6 +16,7 @@ class MovementReversalService
         'stock_transfer',
         'stock_transfer_cancel',
         'procurement.goods_receipt',
+        'sales.fulfillment',
     ];
 
     public function __construct(
@@ -31,12 +32,7 @@ class MovementReversalService
         string $reason,
     ) {
         return $this->perform(
-            $organization,
-            $actor,
-            $movementPublicId,
-            $idempotencyKey,
-            $reason,
-            false,
+            $organization,$actor,$movementPublicId,$idempotencyKey,$reason,false,
         );
     }
 
@@ -48,12 +44,7 @@ class MovementReversalService
         string $reason,
     ) {
         return $this->perform(
-            $organization,
-            $actor,
-            $movementPublicId,
-            $idempotencyKey,
-            $reason,
-            true,
+            $organization,$actor,$movementPublicId,$idempotencyKey,$reason,true,
         );
     }
 

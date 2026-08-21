@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\V1\SalesFulfillmentController;
 use App\Http\Controllers\Api\V1\SalesOrderController;
 use App\Http\Controllers\Api\V1\SalesOrderDecisionController;
 use App\Http\Controllers\Api\V1\SalesOrderReservationController;
@@ -47,6 +48,31 @@ Route::prefix('v1/sales')
             SalesOrderReservationController::class, 'release',
         ])->middleware([
             'permission:inventory.reserve',
+            'privileged.reason',
+        ]);
+
+        Route::post('/orders/{salesOrderPublicId}/fulfillments/pick', [
+            SalesFulfillmentController::class, 'pick',
+        ])->middleware([
+            'permission:sales.manage',
+            'permission:inventory.reserve',
+        ]);
+
+        Route::get('/fulfillments/{fulfillmentPublicId}', [
+            SalesFulfillmentController::class, 'show',
+        ])->middleware('permission:sales.view');
+
+        Route::post('/fulfillments/{fulfillmentPublicId}/dispatch', [
+            SalesFulfillmentController::class, 'dispatch',
+        ])->middleware([
+            'permission:sales.manage',
+            'permission:inventory.reserve',
+        ]);
+
+        Route::post('/fulfillments/{fulfillmentPublicId}/reverse', [
+            SalesFulfillmentController::class, 'reverse',
+        ])->middleware([
+            'permission:inventory.reverse',
             'privileged.reason',
         ]);
     });

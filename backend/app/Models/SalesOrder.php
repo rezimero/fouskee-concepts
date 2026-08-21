@@ -58,4 +58,9 @@ class SalesOrder extends Model
     {
         return $this->hasMany(SalesOrderLine::class);
     }
+
+    public function fulfillments(): HasMany
+    {
+        return $this->hasMany(SalesFulfillment::class);
+    }
 }

@@ -16,6 +16,7 @@ class InventoryReservation extends Model
         'inventory_lot_id', 'source_reference_type',
         'source_reference_public_id', 'quantity_base', 'status',
         'expires_at', 'created_by_user_id', 'released_by_user_id', 'released_at',
+        'fulfilled_by_user_id', 'fulfilled_at',
     ];
 
     protected function casts(): array
@@ -25,6 +26,7 @@ class InventoryReservation extends Model
             'status' => InventoryReservationStatus::class,
             'expires_at' => 'datetime',
             'released_at' => 'datetime',
+            'fulfilled_at' => 'datetime',
         ];
     }
 

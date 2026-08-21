@@ -24,6 +24,7 @@ class SalesOrderReservationService
         private readonly SalesOrderReservationAllocator $allocator,
         private readonly InventoryReservationService $reservations,
         private readonly SalesOrderReservationSummary $summary,
+        private readonly SalesFulfillmentGuard $fulfillmentGuard,
         private readonly AuditRecorder $audit,
     ) {}
 
@@ -87,6 +88,7 @@ class SalesOrderReservationService
         ) {
             $order = $this->lockedOrder($organization, $orderPublicId);
             $this->assertApproved($order);
+            $this->fulfillmentGuard->assertReservationReleaseAllowed($order);
             $active = $this->active($order);
 
             foreach ($active as $reservation) {
